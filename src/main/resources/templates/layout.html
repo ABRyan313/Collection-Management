@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Collection Management</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <!-- Header content -->
+        </header>
+        <main>
+            <div th:replace="fragments::header"></div>
+            <div th:replace="fragments::messages"></div>
+            <div th:replace="fragments::content"></div>
+        </main>
+        <footer>
+            <!-- Footer content -->
+        </footer>
+    </div>
+
+    <!-- Theme switching and autocomplete scripts -->
+    <script>
+        function switchTheme() {
+            var body = document.body;
+            body.classList.toggle('dark-theme');
+            // Save theme preference in a cookie or local storage
+        }
+
+        $(function() {
+            var availableTags = [/* Fetch from server */];
+            $("#tags").autocomplete({
+                source: availableTags
+            });
+        });
+    </script>
+</body>
+</html>
+

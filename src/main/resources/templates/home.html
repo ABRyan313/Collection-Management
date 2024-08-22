@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dtreasures - Home</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+    <div class="container">
+        <!-- Recently Added Items -->
+        <h2>Recently Added Items</h2>
+        <div class="recent-items">
+            <ul>
+                <li th:each="item : ${recentItems}">
+                    <strong th:text="${item.name}">Item Name</strong> - 
+                    <span th:text="${item.collection.name}">Collection Name</span> by 
+                    <span th:text="${item.author}">Author Name</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Top 5 Largest Collections -->
+        <h2>Top 5 Largest Collections</h2>
+        <div class="largest-collections">
+            <ul>
+                <li th:each="collection : ${topCollections}">
+                    <strong th:text="${collection.name}">Collection Name</strong> - 
+                    <span th:text="${#lists.size(collection.items)}">Number of Items</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tag Cloud -->
+        <h2>Tags</h2>
+        <div class="tag-cloud">
+            <span th:each="tag : ${tags}">
+                <a th:href="@{/search(tag=${tag.name})}" th:text="${tag.name}">Tag Name</a>
+            </span>
+        </div>
+    </div>
+</body>
+</html>

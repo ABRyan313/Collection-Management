@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{login.title}">Dtreasures</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Dtreasures</h2>
+    <form th:action="@{/login}" method="post">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <div class="form-group">
+            <label for="username" th:text="#{login.email}">Email:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="#{login.password}">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{login.submit}">Login</button>
+    </form>
+    <hr>
+    <p th:text="#{login.noAccount}">Don't have an account?</p>
+    <a class="btn btn-secondary" th:href="@{/register}" th:text="#{login.signup}">Sign Up</a>
+</div>
+</body>
+</html>

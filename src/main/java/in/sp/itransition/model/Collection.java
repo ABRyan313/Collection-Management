@@ -1,9 +1,8 @@
 package in.sp.itransition.model;
 
-
-
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,67 +23,77 @@ public class Collection {
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "collection")
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Item> items;
 
-	public Long getId() {
-		return id;
-	}
+    public Collection() {}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Collection(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getCategory() {
-		return category;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+    public String getCategory() {
+        return category;
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-	public Set<Item> getItems() {
-		return items;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setItems(Set<Item> items) {
-		this.items = items;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
+
+    // Utility method to get the number of items in the collection
+    public int getItemsSize() {
+        return this.items != null ? this.items.size() : 0;
+    }
 }

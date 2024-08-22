@@ -1,11 +1,11 @@
 package in.sp.itransition.service;
 
-
 import in.sp.itransition.model.Collection;
 import in.sp.itransition.repository.CollectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,5 +29,13 @@ public class CollectionService {
 
     public void deleteCollection(Long id) {
         collectionRepository.deleteById(id);
+    }
+
+    /**
+     * Get the top 5 largest collections based on the number of items they contain.
+     * @return a list of the top 5 largest collections.
+     */
+    public List<Collection> getTopCollections() {
+        return collectionRepository.findTop5ByOrderByItemsSizeDesc();
     }
 }

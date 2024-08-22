@@ -1,8 +1,7 @@
 package in.sp.itransition.model;
 
-
+import java.time.LocalDateTime;
 import java.util.Set;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,8 +13,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-//import io.micrometer.core.instrument.Tag;
-
 @Entity
 public class Item {
     @Id
@@ -25,10 +22,10 @@ public class Item {
     private String name;
     private String description;
 
-   
+    private LocalDateTime createdAt;
 
-	@ManyToOne
-    @JoinColumn(name = "collection_id")
+    @ManyToOne
+    @JoinColumn(name = "collection_id", nullable = false)
     private Collection collection;
 
     @ManyToMany
@@ -38,63 +35,72 @@ public class Item {
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
     
-    public Item() {}
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
+
+    public Item() {
+        this.createdAt = LocalDateTime.now();  // Set the creation time when the item is created
+    }
 
     public Item(String name, String description) {
         this.name = name;
         this.description = description;
+        this.createdAt = LocalDateTime.now();  // Set the creation time when the item is created
     }
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 	
-	 public String getDescription() {
-			return description;
-		}
+    public String getDescription() {
+        return description;
+    }
 
-		public void setDescription(String description) {
-			this.description = description;
-		}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Collection getCollection() {
-		return collection;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setCollection(Collection collection) {
-		this.collection = collection;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public Set<Tag> getTags() {
-		return tags;
-	}
+    public Collection getCollection() {
+        return collection;
+    }
 
-	public void setTags(Set<Tag> tags) {
-		this.tags = tags;
-	}
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
 
-	public Set<Comment> getComments() {
-		return comments;
-	}
+    public Set<Tag> getTags() {
+        return tags;
+    }
 
-	public void setComments(Set<Comment> comments) {
-		this.comments = comments;
-	}
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
-    
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 }

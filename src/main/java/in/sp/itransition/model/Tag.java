@@ -1,7 +1,5 @@
 package in.sp.itransition.model;
 
-
-
 import jakarta.persistence.*;
 import java.util.Set;
 
@@ -16,29 +14,35 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Item> items;
 
-	public Long getId() {
-		return id;
-	}
+    // Default constructor
+    public Tag() {}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    // Constructor with parameters
+    public Tag(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Set<Item> getItems() {
-		return items;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setItems(Set<Item> items) {
-		this.items = items;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
 }

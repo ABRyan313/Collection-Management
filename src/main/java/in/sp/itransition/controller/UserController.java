@@ -1,7 +1,5 @@
 package in.sp.itransition.controller;
 
-
-
 import in.sp.itransition.model.User;
 import in.sp.itransition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +26,16 @@ public class UserController {
         return "user/detail";
     }
 
-    @PostMapping
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
+    }
+
+    @PostMapping("/register")
     public String createUser(@ModelAttribute User user) {
         userService.saveUser(user);
-        return "redirect:/users";
+        return "redirect:/login"; // Redirect to the login page after registration
     }
 
     @DeleteMapping("/{id}")

@@ -15,6 +15,9 @@
                     <span th:text="${item.collection.name}">Collection Name</span> by 
                     <span th:text="${item.author}">Author Name</span>
                 </li>
+                <li th:if="${#lists.isEmpty(recentItems)}">
+                    No items have been added recently.
+                </li>
             </ul>
         </div>
 
@@ -26,6 +29,9 @@
                     <strong th:text="${collection.name}">Collection Name</strong> - 
                     <span th:text="${#lists.size(collection.items)}">Number of Items</span>
                 </li>
+                <li th:if="${#lists.isEmpty(topCollections)}">
+                    No collections available.
+                </li>
             </ul>
         </div>
 
@@ -34,6 +40,9 @@
         <div class="tag-cloud">
             <span th:each="tag : ${tags}">
                 <a th:href="@{/search(tag=${tag.name})}" th:text="${tag.name}">Tag Name</a>
+            </span>
+            <span th:if="${#lists.isEmpty(tags)}">
+                No tags available.
             </span>
         </div>
     </div>

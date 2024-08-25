@@ -17,4 +17,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     // Custom method to find items by tag name
     List<Item> findByTags_Name(String tag);
+    
+    List<Item> findByCollection_UserId(Long userId);
 }

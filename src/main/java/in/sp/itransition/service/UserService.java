@@ -28,7 +28,7 @@ public class UserService {
 
     public User saveUser(User user) {
         // Check if email is already registered
-        if (userRepository.findByEmail(user.getEmail()) != null) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email is already in use");
         }
         // Encode the password
@@ -42,4 +42,8 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+    
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+}
 }

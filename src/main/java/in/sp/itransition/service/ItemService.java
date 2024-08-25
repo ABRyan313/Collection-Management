@@ -4,6 +4,8 @@ package in.sp.itransition.service;
 
 import in.sp.itransition.model.Item;
 import in.sp.itransition.repository.ItemRepository;
+import in.sp.itransition.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,14 @@ public class ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    public List<Item> getItemsByUserEmail(String email) {
+        Long userId = userRepository.findByEmail(email).get().getId();
+        return itemRepository.findByCollection_UserId(userId);
+    }
 
     public List<Item> getAllItems() {
         return itemRepository.findAll();

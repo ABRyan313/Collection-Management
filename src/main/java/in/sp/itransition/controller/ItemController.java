@@ -2,14 +2,21 @@ package in.sp.itransition.controller;
 
 
 
-import in.sp.itransition.model.Item;
-import in.sp.itransition.service.ItemService;
+import java.security.Principal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
+import in.sp.itransition.model.Item;
+import in.sp.itransition.service.ItemService;
 
 @Controller
 @RequestMapping("/items")
@@ -53,4 +60,12 @@ public class ItemController {
         model.addAttribute("items", itemService.getItemsByTag(tag));
         return "item/tag";
     }
+    
+    @GetMapping("/user/items")
+    public String getUserItems(Principal principal, Model model) {
+        String userEmail = principal.getName();
+        List<Item> userItems = itemService.getItemsByUserEmail(userEmail);
+        model.addAttribute("items", userItems);
+        return "user_items";
+}
 }

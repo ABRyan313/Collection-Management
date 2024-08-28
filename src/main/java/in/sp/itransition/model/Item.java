@@ -39,7 +39,6 @@ public class Item {
     private Set<Comment> comments;
 
     public Item() {
-        this.createdAt = LocalDateTime.now();  // Set the creation time when the item is created
     }
 
     public Item(String name, String description) {

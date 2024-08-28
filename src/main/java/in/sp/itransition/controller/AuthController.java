@@ -1,7 +1,7 @@
 package in.sp.itransition.controller;
 
 import in.sp.itransition.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+
     
-    @Autowired
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
@@ -27,18 +26,21 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, 
+    public String login(@RequestParam String email, 
                         @RequestParam String password, 
                         Model model) {
         try {
-            authService.authenticate(username, password);
-            return "redirect:/home"; // or wherever you want to redirect after successful login
+            authService.authenticate(email, password);
+            return "redirect:/home"; // Redirect after successful login
         } catch (UsernameNotFoundException ex) {
             model.addAttribute("error", "No account found with that email.");
-            return "login"; // return to login page with error message
+            return "login"; // Return to login page with error message
         } catch (BadCredentialsException ex) {
             model.addAttribute("error", "Invalid email or password.");
-            return "login"; // return to login page with error message
+            return "login"; // Return to login page with error message
+        } catch (Exception ex) {
+            model.addAttribute("error", "An unexpected error occurred.");
+            return "login"; // Return to login page with error message
         }
     }
 
@@ -48,13 +50,16 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String name, @RequestParam String email, @RequestParam String password, Model model) {
+    public String register(@RequestParam String name, 
+                           @RequestParam String email, 
+                           @RequestParam String password, 
+                           Model model) {
         try {
             authService.register(name, email, password);
-            return "redirect:/login";
+            return "redirect:/login"; // Redirect to login page after successful registration
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
-            return "register";
+            return "register"; // Return to registration page with error message
         }
     }
 }

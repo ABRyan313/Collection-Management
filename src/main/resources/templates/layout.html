@@ -10,17 +10,19 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <!-- Header content -->
-        </header>
-        <main>
-            <div th:replace="fragments::header"></div>
-            <div th:replace="fragments::messages"></div>
-            <div th:replace="fragments::content"></div>
-        </main>
-        <footer>
-            <!-- Footer content -->
-        </footer>
+        <!-- Define a fragment named 'layout' -->
+        <div th:fragment="layout">
+            <header>
+                <!-- Header content -->
+            </header>
+            <main>
+                <!-- This is where the content from other pages will be inserted -->
+                <div th:replace="~{fragments :: content}"></div>
+            </main>
+            <footer>
+                <!-- Footer content -->
+            </footer>
+        </div>
     </div>
 
     <!-- Theme switching and autocomplete scripts -->
@@ -40,4 +42,3 @@
     </script>
 </body>
 </html>
-

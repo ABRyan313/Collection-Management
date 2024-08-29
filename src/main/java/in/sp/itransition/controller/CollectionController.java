@@ -1,7 +1,9 @@
 package in.sp.itransition.controller;
 
 import in.sp.itransition.model.Collection;
+import in.sp.itransition.model.User;
 import in.sp.itransition.service.CollectionService;
+import in.sp.itransition.service.UserService;
 
 import java.util.Optional;
 
@@ -16,6 +18,9 @@ public class CollectionController {
 
     @Autowired
     private CollectionService collectionService;
+    
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public String listCollections(Model model) {
@@ -31,7 +36,13 @@ public class CollectionController {
 
     @PostMapping
     public String createCollection(@ModelAttribute Collection collection) {
-        collectionService.saveCollection(collection);
+    	
+        collection.setId(1L);
+        collection.setImageUrl("ab");
+        User user1 = userService.findByEmail("abir4044@diu.edu.bd");
+        collection.setUser(user1);
+        
+    	collectionService.saveCollection(collection);
         return "redirect:/collections";
     }
 

@@ -1,8 +1,10 @@
 package in.sp.itransition.controller;
 
-
 import in.sp.itransition.model.Collection;
 import in.sp.itransition.service.CollectionService;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,15 +18,15 @@ public class CollectionController {
     private CollectionService collectionService;
 
     @GetMapping
-    public String getCollections(Model model) {
+    public String listCollections(Model model) {
         model.addAttribute("collections", collectionService.getAllCollections());
-        return "collection/list";
+        return "collections";
     }
 
-    @GetMapping("/{id}")
-    public String getCollection(@PathVariable Long id, Model model) {
-        model.addAttribute("collection", collectionService.getCollectionById(id));
-        return "collection/detail";
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("collection", new Collection());
+        return "create-collection";
     }
 
     @PostMapping
@@ -33,7 +35,21 @@ public class CollectionController {
         return "redirect:/collections";
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Optional<Collection> collection = collectionService.getCollectionById(id);
+        model.addAttribute("collection", collection);
+        return "edit-collection";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateCollection(@PathVariable Long id, @ModelAttribute Collection collection) {
+        collection.setId(id);
+        collectionService.saveCollection(collection);
+        return "redirect:/collections";
+    }
+
+    @GetMapping("/delete/{id}")
     public String deleteCollection(@PathVariable Long id) {
         collectionService.deleteCollection(id);
         return "redirect:/collections";

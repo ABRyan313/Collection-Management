@@ -8,36 +8,49 @@
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/jquery-ui.min.js}"></script>
 </head>
-<body>
+<body class="light-theme">
     <div class="container">
-        <!-- Define a fragment named 'layout' -->
-        <div th:fragment="layout">
-            <header>
-                <!-- Header content -->
-            </header>
-            <main>
-                <!-- This is where the content from other pages will be inserted -->
-                <div th:replace="~{fragments :: content}"></div>
-            </main>
-            <footer>
-                <!-- Footer content -->
-            </footer>
-        </div>
+        <header>
+            <!-- Theme Switch Button -->
+            <button onclick="switchTheme()">Switch Theme</button>
+
+            <!-- Language Switch Buttons -->
+            <button onclick="switchLanguage('en')">English</button>
+            <button onclick="switchLanguage('es')">Español</button>
+
+            <!-- Other header content -->
+        </header>
+        
+        <main>
+            <!-- Content will be injected here -->
+            <div th:replace="~{fragments :: content}"></div>
+        </main>
+        
+        <footer>
+            <!-- Footer content -->
+        </footer>
     </div>
 
-    <!-- Theme switching and autocomplete scripts -->
+    <!-- Theme and Language Switching Scripts -->
     <script>
         function switchTheme() {
             var body = document.body;
             body.classList.toggle('dark-theme');
-            // Save theme preference in a cookie or local storage
+            body.classList.toggle('light-theme');
+
+            // Save theme preference in localStorage
+            const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
         }
 
-        $(function() {
-            var availableTags = [/* Fetch from server */];
-            $("#tags").autocomplete({
-                source: availableTags
-            });
+        function switchLanguage(language) {
+            window.location.search = '?lang=' + language;
+        }
+
+        // Apply the saved theme on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(savedTheme + '-theme');
         });
     </script>
 </body>

@@ -7,7 +7,7 @@
 <body>
 <div class="container">
     <h2>Collections</h2>
-    <a href="#" class="btn btn-primary">Create New Collection</a>
+    <a th:href="@{/collections/new}" class="btn btn-primary">Create New Collection</a>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -23,8 +23,8 @@
                 <td th:text="${collection.description}"></td>
                 <td th:text="${collection.category}"></td>
                 <td>
-                    <a href="#" class="btn btn-info">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
+                    <a th:href="@{/collections/edit/{id}(id=${collection.id})}" class="btn btn-info">Edit</a>
+                    <a th:href="@{/collections/delete/{id}(id=${collection.id})}" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         </tbody>

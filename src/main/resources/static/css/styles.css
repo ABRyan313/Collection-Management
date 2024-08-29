@@ -1,0 +1,13 @@
+/* Default (light theme) */
+body.light-theme {
+    background-color: white;
+    color: black;
+}
+
+/* Dark theme */
+body.dark-theme {
+    background-color: black;
+    color: white;
+}
+
+/* Add more styles as needed for both themes */

@@ -28,4 +28,10 @@ public class HomeController {
         model.addAttribute("tags", tagService.getAllTags());
         return "home";
     }
+    
+	/*
+	 * @GetMapping("/collections") public String showCollectionsManagementPage(Model
+	 * model) { model.addAttribute("collections",
+	 * collectionService.getAllCollections()); return "collections"; }
+	 */
 }

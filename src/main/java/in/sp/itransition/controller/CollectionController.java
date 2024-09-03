@@ -1,16 +1,20 @@
 package in.sp.itransition.controller;
 
-import in.sp.itransition.model.Collection;
-import in.sp.itransition.model.User;
-import in.sp.itransition.service.CollectionService;
-import in.sp.itransition.service.UserService;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import in.sp.itransition.model.Collection;
+import in.sp.itransition.model.User;
+import in.sp.itransition.service.CollectionService;
+import in.sp.itransition.service.UserService;
 
 @Controller
 @RequestMapping("/collections")
@@ -18,7 +22,7 @@ public class CollectionController {
 
     @Autowired
     private CollectionService collectionService;
-    
+
     @Autowired
     private UserService userService;
 
@@ -36,20 +40,20 @@ public class CollectionController {
 
     @PostMapping
     public String createCollection(@ModelAttribute Collection collection) {
-    	
-        collection.setId(1L);
-        collection.setImageUrl("ab");
-        User user1 = userService.findByEmail("abir4044@diu.edu.bd");
-        collection.setUser(user1);
-        
-    	collectionService.saveCollection(collection);
+        User user = userService.findByEmail("abir4044@diu.edu.bd");
+        if (user != null) {
+            collection.setUser(user);
+            collectionService.saveCollection(collection);
+        } else {
+            return "redirect:/collections?error=UserNotFound";
+        }
         return "redirect:/collections";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Optional<Collection> collection = collectionService.getCollectionById(id);
-        model.addAttribute("collection", collection);
+        model.addAttribute("collection", collection.orElse(null));
         return "edit-collection";
     }
 

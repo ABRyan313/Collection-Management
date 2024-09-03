@@ -1,5 +1,7 @@
+// Collection.java
 package in.sp.itransition.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -13,6 +15,7 @@ import jakarta.persistence.OneToMany;
 
 @Entity
 public class Collection {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,13 +30,14 @@ public class Collection {
     private User user;
 
     @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Item> items;
+    private Set<Item> items = new HashSet<>(); // Initialized to avoid null checks
 
     public Collection() {}
 
     public Collection(String name, String description) {
         this.name = name;
         this.description = description;
+        this.items = new HashSet<>(); // Initialize items set in constructor
     }
 
     public Long getId() {

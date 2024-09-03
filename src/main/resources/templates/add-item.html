@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Item</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Add Item</h2>
+    <form th:action="@{/items/new}" th:object="${item}" method="post" enctype="multipart/form-data">
+        <!-- Ensure collectionId is passed correctly -->
+        <input type="hidden" th:value="${collectionId}" name="collectionId"/>
+
+        <div class="form-group">
+            <label for="name">Item Name:</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="*{description}" class="form-control" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="file">Upload File:</label>
+            <input type="file" id="file" name="file" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Item</button>
+        <a th:href="@{/collections}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

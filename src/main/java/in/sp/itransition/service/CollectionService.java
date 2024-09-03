@@ -31,10 +31,6 @@ public class CollectionService {
         collectionRepository.deleteById(id);
     }
 
-    /**
-     * Get the top 5 largest collections based on the number of items they contain.
-     * @return a list of the top 5 largest collections.
-     */
     public List<Collection> getTopCollections() {
         return collectionRepository.findTop5ByOrderByItemsSizeDesc();
     }

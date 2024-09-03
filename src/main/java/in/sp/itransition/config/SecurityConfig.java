@@ -12,15 +12,16 @@ import in.sp.itransition.model.User;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {	
+public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        .authorizeHttpRequests(authorize -> authorize
+            .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/register", "/login", "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/collections/**").authenticated() // Allow authenticated users to access collection-related endpoints
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -45,10 +46,10 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
     User userBean() {
-        // Create and configure your User bean here
+        // Create and configure your User bean here if needed
         return new User();
     }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Items</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Items</h2>
+    <!-- Ensure the Add New Item button links correctly to the add-item page -->
+    <a th:href="@{/collections/{collectionId}/items/new(collectionId=${collectionId})}" class="btn btn-primary">Add New Item</a>
+    <table class="table table-striped mt-3">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Uploaded File</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.description}"></td>
+            <td>
+                <!-- Display the uploaded file with preview or download link based on the file type -->
+                <div th:if="${item.fileType != null}">
+                    <div th:if="${item.fileType.startsWith('image/')}">
+                        <img th:src="@{/uploads/{fileName}(fileName=${item.fileName})}" alt="Image" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                    <div th:if="${item.fileType.startsWith('application/pdf')}">
+                        <a th:href="@{/uploads/{fileName}(fileName=${item.fileName})}" target="_blank">View PDF</a>
+                    </div>
+                    <div th:if="${!item.fileType.startsWith('image/') && !item.fileType.startsWith('application/pdf')}">
+                        <a th:href="@{/uploads/{fileName}(fileName=${item.fileName})}" download>Download File</a>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <!-- Edit and Delete actions for each item -->
+                <a th:href="@{/collections/{collectionId}/items/edit/{itemId}(collectionId=${item.collection.id}, itemId=${item.id})}" class="btn btn-info">Edit</a>
+                <a th:href="@{/collections/{collectionId}/items/delete/{itemId}(collectionId=${item.collection.id}, itemId=${item.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

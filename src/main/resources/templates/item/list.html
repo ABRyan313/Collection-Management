@@ -7,7 +7,7 @@
 <body>
 <div class="container">
     <h2>Items</h2>
-    <!-- Ensure the Add New Item button links correctly to the add-item page -->
+    <!-- Add New Item button links to the add-item page with the correct collectionId -->
     <a th:href="@{/collections/{collectionId}/items/new(collectionId=${collectionId})}" class="btn btn-primary">Add New Item</a>
     <table class="table table-striped mt-3">
         <thead>
@@ -20,24 +20,24 @@
         </thead>
         <tbody>
         <tr th:each="item : ${items}">
-            <td th:text="${item.name}"></td>
-            <td th:text="${item.description}"></td>
+            <td th:text="${item.name}">Item Name</td>
+            <td th:text="${item.description}">Item Description</td>
             <td>
-                <!-- Display the uploaded file with preview or download link based on the file type -->
-                <div th:if="${item.fileType != null}">
-                    <div th:if="${item.fileType.startsWith('image/')}">
+                <!-- Display the uploaded file with preview or download link -->
+                <div th:if="${item.fileName != null}">
+                    <div th:if="${item.fileType.contentType.startsWith('image/')}">
                         <img th:src="@{/uploads/{fileName}(fileName=${item.fileName})}" alt="Image" style="max-width: 100px; max-height: 100px;">
                     </div>
-                    <div th:if="${item.fileType.startsWith('application/pdf')}">
+                    <div th:if="${item.fileType.contentType.startsWith('application/pdf')}">
                         <a th:href="@{/uploads/{fileName}(fileName=${item.fileName})}" target="_blank">View PDF</a>
                     </div>
-                    <div th:if="${!item.fileType.startsWith('image/') && !item.fileType.startsWith('application/pdf')}">
+                    <div th:if="${!item.fileType.contentType.startsWith('image/') && !item.fileType.contentType.startsWith('application/pdf')}">
                         <a th:href="@{/uploads/{fileName}(fileName=${item.fileName})}" download>Download File</a>
                     </div>
                 </div>
             </td>
             <td>
-                <!-- Edit and Delete actions for each item -->
+                <!-- Edit and Delete actions for each item with correct links -->
                 <a th:href="@{/collections/{collectionId}/items/edit/{itemId}(collectionId=${item.collection.id}, itemId=${item.id})}" class="btn btn-info">Edit</a>
                 <a th:href="@{/collections/{collectionId}/items/delete/{itemId}(collectionId=${item.collection.id}, itemId=${item.id})}" class="btn btn-danger">Delete</a>
             </td>

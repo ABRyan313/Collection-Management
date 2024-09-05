@@ -3,6 +3,9 @@ package in.sp.itransition.model;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,24 +16,27 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    
+
     @NotNull(message = "Item name is required")
     @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
     private String name;
-    
+
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
     private LocalDateTime createdAt;
-
-    // Fields for file information
-    private String fileName;
-    private String fileType;
     
+    @Column(nullable = false)
+    private String fileName;
+
+    // Mark this field as transient to exclude from persistence
+    @Transient
+    private MultipartFile file; 
+
     private String filePath;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] data; // Storing file data as a byte array
 
     @ManyToOne
@@ -47,25 +53,60 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments;
 
-    public Item() {
-        this.setCreatedAt(LocalDateTime.now()); // Ensure timestamp is set upon creation
+    public Item() { // Initialize createdAt during object creation
     }
 
-    public Item(String name, String description) {
+    // Full constructor
+    public Item(Long id, String name, String description, LocalDateTime createdAt, String fileName, 
+                MultipartFile file, String filePath, byte[] data, Collection collection, 
+                Set<Tag> tags, Set<Comment> comments) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.setCreatedAt(LocalDateTime.now());
-    }
-    
-    public String getFilePath() {
-        return filePath;
-    }
-    
-    public void setFilePath(String filePath) {
+        this.createdAt = (createdAt == null) ? LocalDateTime.now() : createdAt;
+        this.fileName = fileName;
+        this.file = file;
         this.filePath = filePath;
+        this.data = data;
+        this.collection = collection;
+        this.tags = tags;
+        this.comments = comments;
     }
 
-    // Getters and setters for file fields
+    // Getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getFileName() {
         return fileName;
     }
@@ -74,12 +115,20 @@ public class Item {
         this.fileName = fileName;
     }
 
-    public String getFileType() {
-        return fileType;
+    public MultipartFile getFile() {
+        return file;
     }
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public byte[] getData() {
@@ -94,31 +143,23 @@ public class Item {
         return collection;
     }
 
-    public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setCollection(Collection collection) {
+    public void setCollection(Collection collection) {
         this.collection = collection;
     }
 
-	/**
-	 * @return the createdAt
-	 */
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public Set<Tag> getTags() {
+        return tags;
+    }
 
-	/**
-	 * @param createdAt the createdAt to set
-	 */
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
-    // Other getters and setters remain unchanged
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 }

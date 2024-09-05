@@ -1,19 +1,14 @@
 package in.sp.itransition.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import in.sp.itransition.model.Collection;
@@ -31,47 +26,63 @@ public class ItemController {
 
     private static final Logger log = LoggerFactory.getLogger(ItemController.class);
 
-    @Autowired
-    private ItemService itemService;
+    private final ItemService itemService;
+    private final CollectionService collectionService;
 
-    @Autowired
-    private CollectionService collectionService;
+    public ItemController(ItemService itemService, CollectionService collectionService) {
+        this.itemService = itemService;
+        this.collectionService = collectionService;
+    }
 
     // Show the add-item form for a specific collection
     @GetMapping("/{collectionId}/items/new")
     public String showAddItemForm(@PathVariable Long collectionId, Model model) {
-        model.addAttribute("collectionId", collectionId); // Ensure this is added to the model
-        model.addAttribute("item", new Item()); // Ensure this is initialized and added
-        return "add-item"; // Ensure the correct template name
+        Optional<Collection> collection = collectionService.getCollectionById(collectionId);
+        if (collection.isPresent()) {
+            model.addAttribute("collectionId", collectionId);
+            model.addAttribute("item", new Item());
+            return "add-item";
+        }
+        return "redirect:/collections?error=CollectionNotFound";
     }
 
     // Handle adding an item to a collection with file upload
     @PostMapping("/{collectionId}/items")
     public String addItemToCollection(
             @PathVariable Long collectionId,
-            @Valid @ModelAttribute Item item,
+            @Valid @ModelAttribute("item") Item item,
             BindingResult result,
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("file") MultipartFile file, // File uploaded from the form
             Model model) {
+
         if (result.hasErrors()) {
             model.addAttribute("collectionId", collectionId);
             return "add-item";
         }
 
         try {
-            itemService.addItemToCollection(collectionId, item, file);
+            // Set file data and name in the item
+            item.setFileName(file.getOriginalFilename());
+            item.setData(file.getBytes()); // Save file data as bytes
+            
+            // Call the service method to save the item
+            itemService.saveItem(collectionId, item);
+            
+            // Redirect to the collection view
             return "redirect:/collections/" + collectionId;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            log.error("Error saving item file", e);
             model.addAttribute("errorMessage", "Error saving item: " + e.getMessage());
-            return "error-page"; 
+            return "error-page"; // Redirect to a generic error page or customize as needed
         }
     }
 
+    
     @GetMapping("/{collectionId}/items/list")
     public String showItemList(@PathVariable Long collectionId, Model model) {
         List<Item> items = itemService.getItemsByCollectionId(collectionId);
         model.addAttribute("items", items);
-        return "item/list"; // Ensure this matches the path and file name
+        return "item/list";
     }
 
     @GetMapping("/{collectionId}/items/{id}")
@@ -106,24 +117,5 @@ public class ItemController {
         return "user_items";
     }
 
-	/**
-	 * @return the log
-	 */
-	public static Logger getLog() {
-		return log;
-	}
-
-	/**
-	 * @return the collectionService
-	 */
-	public CollectionService getCollectionService() {
-		return collectionService;
-	}
-
-	/**
-	 * @param collectionService the collectionService to set
-	 */
-	public void setCollectionService(CollectionService collectionService) {
-		this.collectionService = collectionService;
-	}
+    // Getters, setters, and log retrieval method if needed
 }

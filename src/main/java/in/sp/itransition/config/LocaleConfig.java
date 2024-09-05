@@ -14,7 +14,7 @@ import java.util.Locale;
 public class LocaleConfig implements WebMvcConfigurer {
 
     @Bean
-    public LocaleResolver localeResolver() {
+    LocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver();
         resolver.setDefaultLocale(Locale.ENGLISH);
         resolver.setCookieName("localeInfo");
@@ -22,7 +22,7 @@ public class LocaleConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
+    LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
         interceptor.setParamName("lang");
         return interceptor;

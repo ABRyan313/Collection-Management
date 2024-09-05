@@ -53,8 +53,15 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public Item saveItem(Item item) {
-        return itemRepository.save(item);
+
+    public void saveItem(Long collectionId, Item item) {
+        // Retrieve the collection and associate it with the item
+        Collection collection = collectionRepository.findById(collectionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid collection ID: " + collectionId));
+        item.setCollection(collection);
+
+        // Save the item (the repository will handle saving file data since it's a byte[])
+        itemRepository.save(item);
     }
 
     public void deleteItem(Long id) {

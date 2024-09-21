@@ -1,20 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Items</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item List</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <h2>Items</h2>
-    <!-- Add New Item button links to the add-item page with the correct collectionId -->
-    <a th:href="@{/collections/{collectionId}/items/new(collectionId=${collectionId})}" class="btn btn-primary">Add New Item</a>
-    <table class="table table-striped mt-3">
-        <thead>
+
+<div class="container mt-5">
+    <h2>Items in Collection: <span th:text="${collection.name}">Collection Name</span></h2>
+
+    <!-- Success or error message display -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Items Table -->
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
         <tr>
             <th>Name</th>
             <th>Description</th>
-            <th>Uploaded File</th>
+            <th>Author</th>
+            <th>File</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -22,28 +31,95 @@
         <tr th:each="item : ${items}">
             <td th:text="${item.name}">Item Name</td>
             <td th:text="${item.description}">Item Description</td>
+            <td th:text="${item.author}">Item Author</td>
             <td>
-                <!-- Display the uploaded file with preview or download link -->
-                <div th:if="${item.fileName != null}">
-                    <div th:if="${item.fileType.contentType.startsWith('image/')}">
-                        <img th:src="@{/uploads/{fileName}(fileName=${item.fileName})}" alt="Image" style="max-width: 100px; max-height: 100px;">
-                    </div>
-                    <div th:if="${item.fileType.contentType.startsWith('application/pdf')}">
-                        <a th:href="@{/uploads/{fileName}(fileName=${item.fileName})}" target="_blank">View PDF</a>
-                    </div>
-                    <div th:if="${!item.fileType.contentType.startsWith('image/') && !item.fileType.contentType.startsWith('application/pdf')}">
-                        <a th:href="@{/uploads/{fileName}(fileName=${item.fileName})}" download>Download File</a>
-                    </div>
-                </div>
+                <a th:href="@{/{item.filePath}(filePath=${item.filePath})}" 
+                   target="_blank" 
+                   th:text="${item.fileName}">View File</a>
             </td>
             <td>
-                <!-- Edit and Delete actions for each item with correct links -->
-                <a th:href="@{/collections/{collectionId}/items/edit/{itemId}(collectionId=${item.collection.id}, itemId=${item.id})}" class="btn btn-info">Edit</a>
-                <a th:href="@{/collections/{collectionId}/items/delete/{itemId}(collectionId=${item.collection.id}, itemId=${item.id})}" class="btn btn-danger">Delete</a>
+                <!-- Edit Button -->
+                <button class="btn btn-primary btn-sm"
+                        data-toggle="modal"
+                        data-target="#editModal"
+                        th:attr="data-id=${item.id}, data-name=${item.name}, data-description=${item.description}, data-author=${item.author}">
+                    Edit
+                </button>
+
+                <!-- Delete Button -->
+                <a th:href="@{/collections/{collectionId}/items/{itemId}/delete(collectionId=${collection.id}, itemId=${item.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to delete this item?');">
+                    Delete
+                </a>
+
+                <!-- View Button -->
+                <a th:href="@{/collections/{collectionId}/items/{itemId}(collectionId=${collection.id}, itemId=${item.id})}"
+                   class="btn btn-info btn-sm">
+                    View
+                </a>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form th:action="@{/collections/{collectionId}/items/edit(collectionId=${collection.id})}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Item</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editItemId" name="id">
+
+                        <div class="form-group">
+                            <label for="editItemName">Name:</label>
+                            <input type="text" class="form-control" id="editItemName" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editItemDescription">Description:</label>
+                            <textarea class="form-control" id="editItemDescription" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editItemAuthor">Author:</label>
+                            <input type="text" class="form-control" id="editItemAuthor" name="author" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+    // Populate the Edit Modal with the item's data when the Edit button is clicked
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var itemId = button.data('id');
+        var itemName = button.data('name');
+        var itemDescription = button.data('description');
+        var itemAuthor = button.data('author');
+
+        var modal = $(this);
+        modal.find('#editItemId').val(itemId);
+        modal.find('#editItemName').val(itemName);
+        modal.find('#editItemDescription').val(itemDescription);
+        modal.find('#editItemAuthor').val(itemAuthor);
+    });
+</script>
+
 </body>
 </html>

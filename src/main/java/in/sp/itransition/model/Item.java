@@ -32,11 +32,13 @@ public class Item {
     // Mark this field as transient to exclude from persistence
     @Transient
     private MultipartFile file; 
-
+    
+    @Column(length = 255)
     private String filePath;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] data; // Storing file data as a byte array
 
     @ManyToOne
@@ -52,6 +54,8 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments;
+    
+    private String author;
 
     public Item() { // Initialize createdAt during object creation
     }
@@ -59,7 +63,7 @@ public class Item {
     // Full constructor
     public Item(Long id, String name, String description, LocalDateTime createdAt, String fileName, 
                 MultipartFile file, String filePath, byte[] data, Collection collection, 
-                Set<Tag> tags, Set<Comment> comments) {
+                Set<Tag> tags, Set<Comment> comments, String author) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -71,6 +75,7 @@ public class Item {
         this.collection = collection;
         this.tags = tags;
         this.comments = comments;
+        this.author = author;
     }
 
     // Getters and setters
@@ -161,5 +166,13 @@ public class Item {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+    
+    public String getAuthor() {
+		return author;
+    }
+    
+    public void setAuthor(String author) {
+    	this.author = author;
     }
 }

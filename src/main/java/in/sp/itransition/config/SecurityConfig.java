@@ -21,7 +21,8 @@ public class SecurityConfig {
                 .requestMatchers("/register", "/login", "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/collections/**").authenticated() // Allow authenticated users to access collection-related endpoints
+                .requestMatchers("/collections/**").authenticated()
+                .requestMatchers("/collections/*/items/**").authenticated()// Allow authenticated users to access collection-related endpoints
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

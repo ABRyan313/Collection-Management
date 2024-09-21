@@ -59,10 +59,30 @@ public class CollectionController {
 
     @PostMapping("/edit/{id}")
     public String updateCollection(@PathVariable Long id, @ModelAttribute Collection collection) {
-        collection.setId(id);
-        collectionService.saveCollection(collection);
+        Optional<Collection> existingCollection = collectionService.getCollectionById(id);
+        if (existingCollection.isPresent()) {
+            Collection updatedCollection = existingCollection.get();
+            // Update the collection's attributes
+            updatedCollection.setName(collection.getName());
+            updatedCollection.setDescription(collection.getDescription());
+            updatedCollection.setCategory(collection.getCategory());
+            updatedCollection.setImageUrl(collection.getImageUrl());
+
+            // Fetch and set the user (assuming you're using email or another method to find the current user)
+            User user = userService.findByEmail("abir4044@diu.edu.bd");
+            if (user != null) {
+                updatedCollection.setUser(user);
+            } else {
+                return "redirect:/collections?error=UserNotFound";
+            }
+
+            collectionService.saveCollection(updatedCollection);
+        } else {
+            return "redirect:/collections?error=CollectionNotFound";
+        }
         return "redirect:/collections";
     }
+
 
     @GetMapping("/delete/{id}")
     public String deleteCollection(@PathVariable Long id) {

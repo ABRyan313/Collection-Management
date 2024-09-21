@@ -43,7 +43,7 @@ public class ItemController {
             model.addAttribute("item", new Item());
             return "add-item";
         }
-        return "redirect:/collections?error=CollectionNotFound";
+        return "redirect:/collections/" + collectionId + "/items?error=CollectionNotFound";
     }
 
     // Handle adding an item to a collection with file upload
@@ -61,27 +61,26 @@ public class ItemController {
         }
 
         try {
-            // Set file data and name in the item
-            item.setFileName(file.getOriginalFilename());
-            item.setData(file.getBytes()); // Save file data as bytes
-            
-            // Call the service method to save the item
-            itemService.saveItem(collectionId, item);
-            
-            // Redirect to the collection view
+            // Call the service method to save the item with the file
+            itemService.saveItem(collectionId, item, file);
+
+            // Redirect to the collection view after successful addition
             return "redirect:/collections/" + collectionId;
         } catch (IOException e) {
+            // Log the error and show an appropriate message
             log.error("Error saving item file", e);
             model.addAttribute("errorMessage", "Error saving item: " + e.getMessage());
             return "error-page"; // Redirect to a generic error page or customize as needed
         }
     }
 
+
     
     @GetMapping("/{collectionId}/items/list")
     public String showItemList(@PathVariable Long collectionId, Model model) {
         List<Item> items = itemService.getItemsByCollectionId(collectionId);
         model.addAttribute("items", items);
+        model.addAttribute("collectionId", collectionId); 
         return "item/list";
     }
 

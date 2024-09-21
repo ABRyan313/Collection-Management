@@ -54,15 +54,25 @@ public class ItemService {
     }
 
 
-    public void saveItem(Long collectionId, Item item) {
+    public void saveItem(Long collectionId, Item item, MultipartFile file) throws IOException {
         // Retrieve the collection and associate it with the item
         Collection collection = collectionRepository.findById(collectionId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid collection ID: " + collectionId));
         item.setCollection(collection);
 
-        // Save the item (the repository will handle saving file data since it's a byte[])
+        // Handle file upload if the file is provided and not empty
+        if (file != null && !file.isEmpty()) {
+            // Save the file and get the saved file path
+            String filePath = fileService.saveFile(file, UPLOAD_DIR);
+            item.setFileName(file.getOriginalFilename());
+            item.setFilePath(filePath);
+            item.setData(file.getBytes()); // Store the file data as a byte array
+        }
+
+        // Save the item with associated collection and file data
         itemRepository.save(item);
     }
+
 
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,8 +38,8 @@ public class ItemController {
     // Show the add-item form for a specific collection
     @GetMapping("/{collectionId}/items/new")
     public String showAddItemForm(@PathVariable Long collectionId, Model model) {
-        Optional<Collection> collection = collectionService.getCollectionById(collectionId);
-        if (collection.isPresent()) {
+        Optional<Collection> optionalCollection = collectionService.getCollectionById(collectionId);
+        if (optionalCollection.isPresent()) {
             model.addAttribute("collectionId", collectionId);
             model.addAttribute("item", new Item());
             return "add-item";
@@ -61,11 +62,15 @@ public class ItemController {
         }
 
         try {
+        	Optional<Collection> optionalCollection = collectionService.getCollectionById(collectionId);
+        	// Add logic to save the file and associate it with the collection using collectionId
+            Collection collection = optionalCollection.get();
+                       item.setCollection(collection);
             // Call the service method to save the item with the file
             itemService.saveItem(collectionId, item, file);
 
             // Redirect to the collection view after successful addition
-            return "redirect:/collections/" + collectionId;
+            return "redirect:/collections/list";
         } catch (IOException e) {
             // Log the error and show an appropriate message
             log.error("Error saving item file", e);
@@ -73,6 +78,14 @@ public class ItemController {
             return "error-page"; // Redirect to a generic error page or customize as needed
         }
     }
+    
+    @GetMapping("/list")
+    public String showCollections(Model model) {
+        Set<Collection> collections = collectionService.getAllCollections();
+        model.addAttribute("collections", collections);
+        return "collections"; // This should point to your Thymeleaf template collections.html
+    }
+
 
 
     

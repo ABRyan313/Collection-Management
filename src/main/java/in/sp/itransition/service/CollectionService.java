@@ -18,6 +18,7 @@ public class CollectionService {
     public Set<Collection> getAllCollections() {
         return Set.copyOf(collectionRepository.findAll());
     }
+    
 
     public Optional<Collection> getCollectionById(Long id) {
         return collectionRepository.findById(id);

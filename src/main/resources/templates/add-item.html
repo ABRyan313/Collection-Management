@@ -9,7 +9,7 @@
 		<h2>Add Item</h2>
 		<!-- add-item.html -->
 		<form
-			th:action="@{/collections/{collectionId}/items(collectionId=${collectionId})}"
+			th:action=" @{/collections/{collectionId}/items(collectionId=${collectionId})}"
 			th:object="${item}" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="name">Item Name:</label> <input type="text"

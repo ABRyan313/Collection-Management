@@ -92,10 +92,19 @@ public class ItemController {
     @GetMapping("/{collectionId}/items/list")
     public String showItemList(@PathVariable Long collectionId, Model model) {
         List<Item> items = itemService.getItemsByCollectionId(collectionId);
-        model.addAttribute("items", items);
-        model.addAttribute("collectionId", collectionId); 
-        return "item/list";
+        Optional<Collection> collectionOptional = collectionService.getCollectionById(collectionId);
+
+        if (collectionOptional.isPresent()) {
+            Collection collection = collectionOptional.get();
+            model.addAttribute("items", items);
+            model.addAttribute("collection", collection); // Pass the collection object
+            model.addAttribute("collectionId", collectionId);
+            return "item/list";
+        }
+
+        return "redirect:/collections?error=CollectionNotFound"; // Handle collection not found
     }
+
 
     @GetMapping("/{collectionId}/items/{id}")
     public String getItem(@PathVariable Long collectionId, @PathVariable Long id, Model model) {

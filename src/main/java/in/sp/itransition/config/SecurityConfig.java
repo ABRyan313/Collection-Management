@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,10 +33,20 @@ public class SecurityConfig {
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout") // URL for logout
-                .logoutSuccessUrl("/login?logout") // Redirect to login page with logout message
-                .permitAll()
-            )
+                    // Custom logout handling
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .permitAll()
+                    )
+            .sessionManagement(session -> session
+                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                    .invalidSessionUrl("/login?invalid-session=true")  // Redirect on invalid session
+                )
+                .headers(headers -> headers
+                    .cacheControl(cache -> cache.disable())  // Disable caching
+                )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**") // Example for ignoring CSRF on specific paths
             );

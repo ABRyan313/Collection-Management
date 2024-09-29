@@ -1,57 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en"
+	th:lang="${#locale.language}">
 <head>
-    <title>Collection Management</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <script th:src="@{/js/jquery.min.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/jquery-ui.min.js}"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="#{app.title}">Collection Management App</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link th:href="@{/css/light-theme.css}" rel="stylesheet" id="theme-link"
+	th:if="${theme == 'light'}" />
+<link th:href="@{/css/dark-theme.css}" rel="stylesheet" id="theme-link"
+	th:if="${theme == 'dark'}" />
+<script th:src="@{/js/theme-toggle.js}"></script>
+<script th:src="@{/js/language-toggle.js}"></script>
 </head>
-<body class="light-theme">
-    <div class="container">
-        <header>
-            <!-- Theme Switch Button -->
-            <button onclick="switchTheme()">Switch Theme</button>
 
-            <!-- Language Switch Buttons -->
-            <button onclick="switchLanguage('en')">English</button>
-            <button onclick="switchLanguage('es')">Español</button>
+<body class="default-theme">
+	<!-- Header Section -->
+	<header th:replace="fragments/header :: header"></header>
 
-            <!-- Other header content -->
-        </header>
-        
-        <main>
-            <!-- Content will be injected here -->
-            <div th:replace="~{fragments :: content}"></div>
-        </main>
-        
-        <footer>
-            <!-- Footer content -->
-        </footer>
-    </div>
+	<!-- Main Content Area -->
+	<div layout:fragment="content">
+		<!-- Dynamic content will be injected here -->
+	</div>
 
-    <!-- Theme and Language Switching Scripts -->
-    <script>
-        function switchTheme() {
-            var body = document.body;
-            body.classList.toggle('dark-theme');
-            body.classList.toggle('light-theme');
+	<!-- Footer Section -->
+	<footer th:replace="fragments/footer :: footer"></footer>
 
-            // Save theme preference in localStorage
-            const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
-            localStorage.setItem('theme', currentTheme);
-        }
+	<!-- Theme Switcher Button -->
+	<button id="theme-toggler" onclick="toggleTheme()"
+		th:text="#{button.toggle.theme}">Switch Theme</button>
 
-        function switchLanguage(language) {
-            window.location.search = '?lang=' + language;
-        }
+	<!-- Language Switcher Dropdown -->
+	<div class="language-switcher">
+		<form method="get" action="#" th:action="@{/setLanguage}">
+			<select name="lang" onchange="this.form.submit()">
+				<option value="en" th:selected="${#locale.language == 'en'}"
+					th:text="#{language.english}">English</option>
+				<option value="ar" th:selected="${#locale.language == 'ar'}"
+					th:text="#{language.arabic}">Arabic</option>
+			</select>
+		</form>
 
-        // Apply the saved theme on page load
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.classList.add(savedTheme + '-theme');
-        });
-    </script>
+		
+	</div>
 </body>
 </html>

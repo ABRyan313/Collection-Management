@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer class="footer" th:fragment="footer">
+        <p>&copy; 2024 <span th:text="#{app.title}">Collection Manager</span>. All rights reserved.</p>
+        <a href="/contact" th:href="@{/contact}">Contact Us</a> |
+        <a href="/terms" th:href="@{/terms}">Terms of Service</a> |
+        <a href="/privacy" th:href="@{/privacy}">Privacy Policy</a>
+    </footer>
+</body>
+</html>

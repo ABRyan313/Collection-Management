@@ -1,47 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
-<title>Collections</title>
-<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <title th:text="#{collections.title}">Collections</title> <!-- This will use a translation key for title -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
-<body>
-	<div class="container">
-		<h2>Collections</h2>
-		<a th:href="@{/collections/new}" class="btn btn-primary">Create
-			New Collection</a>
-		<table class="table table-striped mt-3">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Category</th>
-					<th>Actions</th>
-					<th>Items</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="collection : ${collections}">
-					<td th:text="${collection.name}"></td>
-					<td th:text="${collection.description}"></td>
-					<td th:text="${collection.category}"></td>
-					<td><a
-						th:href="@{/collections/edit/{id}(id=${collection.id})}"
-						class="btn btn-info">Edit</a> <a
-						th:href="@{/collections/delete/{id}(id=${collection.id})}"
-						class="btn btn-danger">Delete</a></td>
-					<!-- In collections.html -->
-					<td>
-						<!-- Ensure these links are correct --> <a
-						th:href="@{/collections/{collectionId}/items/new(collectionId=${collection.id})}"
-						class="btn btn-success">Add Item</a> <a
-						th:href="@{/collections/{collectionId}/items/list(collectionId=${collection.id})}"
-						class="btn btn-info"> View Items </a>
 
-					</td>
-
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<body layout:fragment="content">
+    <div class="container">
+        <h2 th:text="#{collections.title}">Collections</h2>
+        <a th:href="@{/collections/new}" class="btn btn-primary" th:text="#{collections.create.new}">Create New Collection</a>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th th:text="#{collections.name}">Name</th>
+                    <th th:text="#{collections.description}">Description</th>
+                    <th th:text="#{collections.category}">Category</th>
+                    <th th:text="#{collections.actions}">Actions</th>
+                    <th th:text="#{collections.items}">Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="collection : ${collections}">
+                    <td th:text="${collection.name}"></td>
+                    <td th:text="${collection.description}"></td>
+                    <td th:text="${collection.category}"></td>
+                    <td>
+                        <a th:href="@{/collections/edit/{id}(id=${collection.id})}" class="btn btn-info" th:text="#{collections.edit}">Edit</a>
+                        <a th:href="@{/collections/delete/{id}(id=${collection.id})}" class="btn btn-danger" th:text="#{collections.delete}">Delete</a>
+                    </td>
+                    <td>
+                        <a th:href="@{/collections/{collectionId}/items/new(collectionId=${collection.id})}" class="btn btn-success" th:text="#{collections.add.item}">Add Item</a>
+                        <a th:href="@{/collections/{collectionId}/items/list(collectionId=${collection.id})}" class="btn btn-info" th:text="#{collections.view.items}">View Items</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

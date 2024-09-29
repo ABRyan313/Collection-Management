@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
     <title>Dtreasures - Home</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
-<body>
+
+<body layout:fragment="content"> 
     <div class="container">
         <!-- Recently Added Items -->
-        <h2>Recently Added Items</h2>
+        <h2 th:text="#{recent.items.title}">Recently Added Items</h2>
         <div class="recent-items">
             <ul>
                 <li th:each="item : ${recentItems}">
@@ -16,13 +16,13 @@
                     <span th:text="${item.author}">Author Name</span>
                 </li>
                 <li th:if="${#lists.isEmpty(recentItems)}">
-                    No items have been added recently.
+                    <span th:text="#{no.items.recent}">No items have been added recently.</span>
                 </li>
             </ul>
         </div>
 
         <!-- Top 5 Largest Collections -->
-        <h2>Top 5 Largest Collections</h2>
+        <h2 th:text="#{top.collections.title}">Top 5 Largest Collections</h2>
         <div class="largest-collections">
             <ul>
                 <li th:each="collection : ${topCollections}">
@@ -30,26 +30,26 @@
                     <span th:text="${#lists.size(collection.items)}">Number of Items</span>
                 </li>
                 <li th:if="${#lists.isEmpty(topCollections)}">
-                    No collections available.
+                    <span th:text="#{no.collections}">No collections available.</span>
                 </li>
             </ul>
         </div>
 
         <!-- Tag Cloud -->
-        <h2>Tags</h2>
+        <h2 th:text="#{tags.title}">Tags</h2>
         <div class="tag-cloud">
             <span th:each="tag : ${tags}">
                 <a th:href="@{/search(tag=${tag.name})}" th:text="${tag.name}">Tag Name</a>
             </span>
             <span th:if="${#lists.isEmpty(tags)}">
-                No tags available.
+                <span th:text="#{no.tags}">No tags available.</span>
             </span>
         </div>
 
         <!-- Link to Collections Management Page -->
-        <h2>Manage Your Collections</h2>
+        <h2 th:text="#{manage.collections.title}">Manage Your Collections</h2>
         <div>
-            <a th:href="@{/collections}" class="btn btn-primary">Go to Collections Management</a>
+            <a th:href="@{/collections}" class="btn btn-primary" th:text="#{go.to.collections.management}">Go to Collections Management</a>
         </div>
     </div>
 </body>

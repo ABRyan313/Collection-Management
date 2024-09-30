@@ -2,19 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en"
 	th:lang="${#locale.language}">
+	
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title th:text="#{app.title}">Collection Management App</title>
+
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 <link rel="stylesheet" th:href="@{/css/styles.css}">
 <link th:href="@{/css/light-theme.css}" rel="stylesheet" id="theme-link"
 	th:if="${theme == 'light'}" />
 <link th:href="@{/css/dark-theme.css}" rel="stylesheet" id="theme-link"
 	th:if="${theme == 'dark'}" />
+	
 <script th:src="@{/js/theme-toggle.js}"></script>
 <script th:src="@{/js/language-toggle.js}"></script>
 </head>
+
 
 <body class="default-theme">
 	<!-- Header Section -->
@@ -43,7 +47,7 @@
 			</select>
 		</form>
 
-		
+
 	</div>
 </body>
 </html>

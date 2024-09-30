@@ -1,44 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection Manager</title>
-    <!-- Include any necessary stylesheets or meta tags -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collection Manager</title>
+<!-- Include any necessary stylesheets or meta tags -->
 </head>
 <body>
-    <div th:fragment="header">
-        <div class="header">
-            <div class="logo">
-                <h1 th:text="#{app.title}">Collection Manager</h1>
-            </div>
-            <nav class="nav-menu">
-                <a th:href="@{/home}">Home</a>
-                <a th:href="@{/collections}">Collections</a>
-                <a th:href="@{/reports}">Reports</a>
-                <a th:href="@{/profile}">Profile</a>
-                <!-- Updated Logout Button -->
-                <a href="#" onclick="submitLogoutForm(); return false;">Logout</a>
-            </nav>
-        </div>
-    </div>
+	<div th:fragment="header">
 
-    <!-- Hidden logout form to submit with POST -->
-    <form id="uniqueLogoutForm" th:action="@{/login}" method="post" style="display: none;">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    </form>
+		<div class="header">
+			<div class="logo">
+				<h1 th:text="#{app.title}">Collection Manager</h1>
+			</div>
+			<nav class="nav-menu" style="display: flex; align-items: center;">
+				<div class="nav-links">
+					<a th:href="@{/home}">Home</a> <a th:href="@{/collections}">Collections</a>
+					<a th:href="@{/reports}">Reports</a> <a th:href="@{/profile}">Profile</a>
+				</div>
 
-    <!-- JavaScript function for form submission -->
-    <script>
-        // Function to submit the hidden logout form
-        function submitLogoutForm() {
-            var logoutForm = document.getElementById('uniqueLogoutForm');
-            if (logoutForm) {
-                logoutForm.submit(); // Submit the form only if it exists
-            } else {
-                console.error('Logout form not found.');
-            }
-        }
-    </script>
+				<!-- Logout Button (Form with POST) aligned to the right -->
+				<form th:action="@{/logout}" method="POST"
+					style="display: inline; margin-left: auto;">
+					<button type="submit" id="logoutButton"
+						style="background-color: red; border: 2px solid darkred; padding: 3px 8px; color: white; cursor: pointer; text-decoration: none; display: inline;">
+						Logout</button>
+				</form>
+			</nav>
+
+
+		</div>
+	</div>
+
 </body>
 </html>

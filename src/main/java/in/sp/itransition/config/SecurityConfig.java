@@ -19,11 +19,11 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/register", "/login", "/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/register", "/login", "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/collections/**").authenticated()
-                .requestMatchers("/collections/*/items/**").authenticated()// Allow authenticated users to access collection-related endpoints
+                .requestMatchers("/collections/*/items/**").authenticated() // Authenticated access for collections
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -44,12 +44,9 @@ public class SecurityConfig {
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .invalidSessionUrl("/login?invalid-session=true")  // Redirect on invalid session
                 )
-                .headers(headers -> headers
-                    .cacheControl(cache -> cache.disable())  // Disable caching
-                )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**") // Example for ignoring CSRF on specific paths
-            );
+                    .ignoringRequestMatchers("/h2-console/**") // Example for ignoring CSRF on specific paths
+                );// Disable CSRF for simplicity; enable for production use!
 
         return http.build();
     }
@@ -61,7 +58,8 @@ public class SecurityConfig {
 
     @Bean
     User userBean() {
-        // Create and configure your User bean here if needed
         return new User();
     }
+    
+    
 }

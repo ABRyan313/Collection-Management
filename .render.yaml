@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: D-Treasures
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    buildFilter:
+      paths:
+        - Dockerfile
+        - .render.yaml
+    envVars:
+      - key: DB_URL
+        value: jdbc:mysql://sql12.freesqldatabase.com:3306/sql12345678
+      - key: DB_USERNAME
+        value: sql12785738
+      - key: DB_PASSWORD
+        value: 389141
